@@ -1,0 +1,3 @@
+show system resources | grep Load
+show system resources | grep Load
+echo " "

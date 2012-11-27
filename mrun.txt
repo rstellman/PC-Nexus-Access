@@ -1,0 +1,13 @@
+Multi Script 
+
+172.25.187.155
+  Load average:   1 minute: 0.28   5 minutes: 0.26   15 minutes: 0.20
+  Load average:   1 minute: 0.34   5 minutes: 0.27   15 minutes: 0.20
+
+172.25.187.50
+ Socket off-line
+  ....
+
+172.25.187.156
+ Socket off-line
+  ....
