@@ -68,7 +68,7 @@ class Beta(Frame):
  
     def initUI(self):
 
-        self.parent.title("Menu-Beta")
+        self.parent.title("PC Nexus Access 1.1")
         menubar = Menu(self.parent)
         fname='/root/scripts/script.txt'
         self.parent.config(menu=menubar)
@@ -97,9 +97,14 @@ class Beta(Frame):
         menubar.add_command (label="Interface", underline = 1, command=self.get_interface)                     
         menubar.add_command (label="Buffers",   underline = 1, command=self.get_BMdata)                        
         menubar.add_command (label="Routing",   underline = 1, command=self.get_routing)
+        menubar.add_command (label="About",     underline = 1, command=self.nexus_about) 
         
     # *******************************************************
     # *               Log Multi-Menu
+
+    def nexus_about (self):
+        text = open('/root/scripts/NexusAbout.txt', 'r').read()
+        self.settext(text)
     
     def display_script(self):
         text = open('/root/scripts/mscript.txt', 'r').read()
