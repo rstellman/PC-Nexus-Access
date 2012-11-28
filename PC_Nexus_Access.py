@@ -135,7 +135,7 @@ class Beta(Frame):
         bufferText = bufferText.replace  (' ,','\n')
             
         if (skip == 1):  # Buffer Monitor; csv data
-                bufferText = bufferText.replace  ('n','\n')
+                bufferText = bufferText.replace  (' n','\n')
                              
         return (bufferText)
 
