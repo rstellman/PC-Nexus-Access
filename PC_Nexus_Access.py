@@ -15,7 +15,7 @@ any results obtained using or referring to the script examples.
 ***************************************************************************************************
 Menu - Beta Script - Test Prototype
 *** Combine Scrolled Text with Example Frame as Main Frame
-Date:  26 Nov 2012  -- R. Stellman
+Date:  28 Nov 2012  -- R. Stellman [ Cleaned up menu ]
 """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -36,7 +36,7 @@ from shutil import *
 
 
 root= Tk()
-root.iconbitmap(default='C:/root/scripts/py.ico')
+root.iconbitmap(default='/root/scripts/py.ico')
 fname="/root/scripts/mrun.txt"
 text=''
 HOSTS= ("172.25.187.155","172.25.187.50","172.25.187.156")
@@ -86,17 +86,17 @@ class Beta(Frame):
         # fileMenu.add_separator()
 
         # multimenu and items
-        
-        menubar.add_cascade (label="Queues",    underline = 1, command=self.get_queue )                                                                  
+
+        menubar.add_command (label="Queues",  underline = 1, command = self.get_queue )                  
 
         multimenu = Menu(menubar, tearoff=0)
         multimenu.add_command (label="script",  underline = 0, command=self.display_script)      
         multimenu.add_command (label="mrun",    underline = 1, command=self.display_log   )     
-        menubar.add_cascade   (label="Log",     underline = 1, menu=multimenu  )                                                                  
+        menubar.add_cascade   (label="Log",     underline = 1, menu=multimenu  )                              
 
-        menubar.add_cascade (label="Interface", underline = 1, command=self.get_interface)                                                                  
-        menubar.add_cascade (label="Buffers",   underline = 1, command=self.get_BMdata)                                                                  
-        menubar.add_cascade (label="Routing",   underline = 1, command=self.get_routing)
+        menubar.add_command (label="Interface", underline = 1, command=self.get_interface)                     
+        menubar.add_command (label="Buffers",   underline = 1, command=self.get_BMdata)                        
+        menubar.add_command (label="Routing",   underline = 1, command=self.get_routing)
         
     # *******************************************************
     # *               Log Multi-Menu
@@ -161,14 +161,14 @@ class Beta(Frame):
         buffer1.close()
         return(bufferText)
 
-    def stringNexusCLI (self, sbuffer='',host1=HOST[1]):
+    def stringNexusCLI (self, sbuffer='',host1=HOSTS[1]):
  
         try:     buffer = repr(Nexus1.s_socket(sbuffer,host1,PORT))
         except:  buffer = "Socket off-line\n  ....\n"         
 
         return(buffer)
       
-    def get_cli_data(self, cli_string="", host1 ='0', skip=0):
+    def get_cli_data(self, cli_string="", host1 =HOSTS[1], skip=0):
  
         data = ""
         data = self.stringNexusCLI(cli_string,host1)
@@ -178,7 +178,7 @@ class Beta(Frame):
        
         return(data)
          
-    def  get_mcli_data(self,  cli_string="", host ='0'):       
+    def  get_mcli_data(self,  cli_string="", host = HOSTS[1]):       
  
          data = ""
          data = self.stringNexusCLI(cli_string,host)
@@ -189,6 +189,7 @@ class Beta(Frame):
          return(data)
 
     def  get_queue (self):
+         host=HOSTS[1]
          buffer = self.get_cli_data ('show platform software qd info global\n', self.host)
          self.settext(buffer)
 
