@@ -4,7 +4,7 @@ echo " "
 echo " --> Running script.txt"
 echo " ...  show system resources ..."
 echo " ...  no shut on eth 1/3       "
-echo " ...  sho inf brief | grep up  "
+echo " ...  sho inf status up  "
 echo " "
 
 show system resources | grep Load
