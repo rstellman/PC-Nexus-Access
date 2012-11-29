@@ -9,15 +9,5 @@ echo " "
 
 show system resources | grep Load
 
-
-config t
-int eth1/3
-no shut
-
-echo ""
-echo "--------------------------------------------------------------------------------"          
-echo "Interface     VLAN   Type Mode   Status  Reason                   Speed     Port"          
-echo "--------------------------------------------------------------------------------"
-
-show int brief | grep up
+show interface status up
 
