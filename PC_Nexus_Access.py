@@ -36,7 +36,7 @@ from shutil import *
 
 
 root= Tk()
-root.iconbitmap(default='/root/scripts/py.ico')
+root.iconbitmap(default='/root/scripts/py.ico')            # Comment this line out for default icon
 fname="/root/scripts/mrun.txt"
 text=''
 HOSTS= ("172.25.187.155","172.25.187.50","172.25.187.156")
@@ -68,15 +68,28 @@ class Beta(Frame):
  
     def initUI(self):
 
-        self.parent.title("PC Nexus Access 1.1")
+        self.parent.title("PC Nexus Access 1.1a")
         menubar = Menu(self.parent)
         fname='/root/scripts/script.txt'
         self.parent.config(menu=menubar)
         #   st=ScrolledText(root)
- 
+
+        # multimenu and items
+
+        multimenu = Menu(menubar, fg='Blue', tearoff=0)
+        multimenu.add_command (label="script",  underline = 0, command=self.display_script)
+        multimenu.add_command (label="run",     underline = 1, command=self.display_runlog )      
+        multimenu.add_separator()
+        multimenu.add_command (label="mscript", underline = 1, command=self.display_mscript)
+        multimenu.add_command (label="mrun",    underline = 1, command=self.display_mrunlog)
+        multimenu.add_separator()
+        multimenu.add_command (label="close",   underline = 0, command=self.close)
+
+        menubar.add_cascade   (label="File",    underline = 1, menu=multimenu  )                              
+
         #   File menu and menu items
         
-        fileMenu = Menu(menubar, tearoff=0)
+        fileMenu = Menu(menubar, fg='Yellow', bg='Blue',tearoff=0)
         fileMenu.add_command (label="Multi",   underline = 0, command=self.run_multiscript)   
         fileMenu.add_command (label='Host0',   underline = 0, command=self.run_host0)           
         fileMenu.add_command (label='Host1',   underline = 0, command=self.run_host1)
@@ -85,32 +98,44 @@ class Beta(Frame):
 
         # fileMenu.add_separator()
 
-        # multimenu and items
+        menubar.add_command (label="Queues",   underline = 1, command = self.get_queue )                  
 
-        menubar.add_command (label="Queues",  underline = 1, command = self.get_queue )                  
+        interfacemenu = Menu(menubar,tearoff=0)
+        interfacemenu.add_command (label="All  ", underline = 1, command=self.get_interface)                     
+        interfacemenu.add_command (label="up   ", underline = 1, command=self.get_interface_up)                     
+        interfacemenu.add_command (label="down ", underline = 1, command=self.get_interface_down)
+        interfacemenu.add_command (label="vlan ", underline = 1, command=self.get_interface_vlan)
+       
+        menubar.add_cascade (label="Interface", underline = 1, menu=interfacemenu)                     
 
-        multimenu = Menu(menubar, tearoff=0)
-        multimenu.add_command (label="script",  underline = 0, command=self.display_script)      
-        multimenu.add_command (label="mrun",    underline = 1, command=self.display_log   )     
-        menubar.add_cascade   (label="Log",     underline = 1, menu=multimenu  )                              
-
-        menubar.add_command (label="Interface", underline = 1, command=self.get_interface)                     
         menubar.add_command (label="Buffers",   underline = 1, command=self.get_BMdata)                        
         menubar.add_command (label="Routing",   underline = 1, command=self.get_routing)
+        menubar.add_command (label="TCP Sockets",underline = 1, command=self.get_tcp_sockets)     
         menubar.add_command (label="About",     underline = 1, command=self.nexus_about) 
         
     # *******************************************************
     # *               Log Multi-Menu
+
+    def close(self):
+        root.destroy()
 
     def nexus_about (self):
         text = open('/root/scripts/NexusAbout.txt', 'r').read()
         self.settext(text)
     
     def display_script(self):
-        text = open('/root/scripts/mscript.txt', 'r').read()
+        text = open('/root/scripts/script.txt', 'r').read()
         self.settext(text)
-        
-    def display_log(self):
+
+    def display_mscript(self):
+        text = open('/root/scripts/mscript.txt', 'r').read()
+        self.settext(text)       
+
+    def display_runlog(self):
+        text = open('/root/scripts/run.txt', 'r').read()                
+        self.settext(text)
+
+    def display_mrunlog(self):
         text = open('/root/scripts/mrun.txt', 'r').read()                
         self.settext(text)
 
@@ -197,11 +222,24 @@ class Beta(Frame):
          host=HOSTS[1]
          buffer = self.get_cli_data ('show platform software qd info global\n', self.host)
          self.settext(buffer)
-
+    #    -----------------------------------------------------------------------------
     def  get_interface (self):
          text = self.get_cli_data ('show int brief\n',self.host)
          self.settext(text)
-        
+
+    def  get_interface_up (self):
+         text = self.get_cli_data ('show int status up \n',self.host)
+         self.settext(text)
+
+    def  get_interface_down (self):
+         text = self.get_cli_data ('show int status down \n',self.host)
+         self.settext(text)
+
+    def  get_interface_vlan (self):
+         text = self.get_cli_data ('show vlan \n',self.host)
+         self.settext(text)
+   
+    #    -----------------------------------------------------------------------------
     def  get_BMdata (self):
          text = self.get_cli_data ('BMdata',self.host,1)
          self.settext(text)
@@ -211,6 +249,7 @@ class Beta(Frame):
          bufferText = self.get_script('/root/scripts/script.txt')                             
          text = self.get_cli_data (bufferText,self.host,0)
          self.settext(text)
+         Nexus1.s_write ("/root/scripts/run.txt", text)
          return(host)
    
     def  run_multiscript (self):
@@ -240,7 +279,10 @@ class Beta(Frame):
          self.host = HOSTS[2]
          self.host = self.run_script(self.host)
         
-        
+    def  get_tcp_sockets(self):
+         text = self.get_cli_data ('show sockets connection tcp\n',self.host,0)
+         self.settext(text)
+          
 # ----------------------------------------------------------------------------------
 #       Main -----------
 
